@@ -4,12 +4,18 @@ public class ImportedProduct extends Product{
 	private double importTaxRate;
 	private double shippingFee;
 	
-	public ImportedProduct() {}
-	public ImportedProduct(String id, String name,double basePrice, double importTaxRate, double shippingFee) {
-		super(id,name,basePrice);
-		this.setImportTaxRate(importTaxRate);
-		this.setShippingFee(shippingFee);
+	
+public ImportedProduct(String id, String name, double basePrice, double importTaxRate, double shippingFee) {
+		super(id, name, basePrice);
+		this.importTaxRate = importTaxRate;
+		this.shippingFee = shippingFee;
 	}
+//	public ImportedProduct() {}
+//	public ImportedProduct(String id, String name,double basePrice, double importTaxRate, double shippingFee) {
+//		super(id,name,basePrice);
+//		this.setImportTaxRate(importTaxRate);
+//		this.setShippingFee(shippingFee);
+//	}
 	public double getImportTaxRate() {
 		return importTaxRate;
 	}
@@ -35,10 +41,12 @@ public class ImportedProduct extends Product{
 		// TODO Auto-generated method stub
 		return super.finalPrice() + super.finalPrice()*this.importTaxRate + this.shippingFee;
 	}
-	@Override
-	public String toString() {
-		return super.toString() + " ImportedProduct [importTaxRate=" + importTaxRate + ", shippingFee=" + shippingFee + "]";
-	}
+	
+	
+//	@Override
+//	public String toString() {
+//		return super.toString() + " ImportedProduct [importTaxRate=" + importTaxRate + ", shippingFee=" + shippingFee + "]";
+//	}
 	
 	
 }
