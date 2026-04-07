@@ -17,14 +17,16 @@ public class Document {
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setId(int id) throws Exception {
+		if(id<=0) throw new Exception("Id phải > 0");
+		else this.id = id;
 	}
 	public String getTitle() {
 		return title;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public void setTitle(String title) throws Exception {
+		if(title == null || title.trim().isEmpty()) throw new Exception("Title không rỗng"); 
+		else this.title = title;
 	}
 	public String getAuthor() {
 		return author;

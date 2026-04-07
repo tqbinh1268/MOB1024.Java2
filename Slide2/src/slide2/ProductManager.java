@@ -23,18 +23,17 @@ class Product {
     }
 }
 
-// === PHẦN ĐỊNH NGHĨA THÊM ===
-@FunctionalInterface
-interface DiscountCalculator {
-    double applyDiscount(Product p, double percentage);
-}
-
 public class ProductManager {
 
+    // 2. Cách viết Cấp độ Lớp (Static Fields) - Tái sử dụng các quy tắc kinh doanh
+    // Predicate: Quy tắc lọc hàng cao cấp
     public static final Predicate<Product> IS_LUXURY = p -> p.price > 1000;
+    
+    // Function: Quy tắc tính giá trị hàng tồn (Giá * Số lượng)
     public static final Function<Product, Double> CALC_VALUE = p -> p.price * p.quantity;
 
     public static void main(String[] args) {
+        // Dữ liệu mẫu
         List<Product> list = new ArrayList<>(Arrays.asList(
             new Product(1, "Macbook M3", 2000.0, 5),
             new Product(2, "Chuột Gaming", 50.0, 2),
@@ -42,31 +41,37 @@ public class ProductManager {
             new Product(4, "iPhone 15 Pro", 1200.0, 3)
         ));
 
-        // --- SỬ DỤNG FUNCTIONAL INTERFACE TỰ ĐỊNH NGHĨA ---
-        // Định nghĩa logic: Giảm giá dựa trên tổng trị giá mặt hàng đó trong kho
-        DiscountCalculator holidayDiscount = (p, rate) -> (p.price * p.quantity) * (rate / 100);
+        // 3. Supplier: Cung cấp sản phẩm mặc định nếu cần (Ví dụ khi tìm không thấy)
+        Supplier<Product> emptyProduct = () -> new Product(0, "Không xác định", 0, 0);
 
-        System.out.println("=== CHƯƠNG TRÌNH KHUYẾN MÃI OMG ===");
-        list.forEach(p -> {
-            double discountAmount = holidayDiscount.applyDiscount(p, 10); // Giảm 10%
-            System.out.println("Sản phẩm: " + p.name + " | Tiền giảm: " + discountAmount + "$");
-        });
-        
-        // --- CÁC PHẦN CŨ CỦA BẠN ---
-        System.out.println("\n=== TẤT CẢ SẢN PHẨM ===");
+        // 4. Consumer: Hành động in báo cáo có định dạng
         Consumer<Product> printReport = p -> {
-            System.out.println(p + " => Tổng giá trị kho: " + CALC_VALUE.apply(p) + "$");
+            double totalValue = CALC_VALUE.apply(p); // Dùng Function ở trên
+            System.out.println(p + " => Tổng giá trị kho: " + totalValue + "$");
         };
-        list.forEach(printReport);
+
+        System.out.println("=== TẤT CẢ SẢN PHẨM ===");
+        list.forEach(printReport); // Dùng Consumer
+        System.out.println("");
+        list.forEach(p -> {
+        	System.out.println(p + " => Tổng giá trị kho: " + p.quantity * p.price + "$ OMG");
+        });
 
         System.out.println("\n=== DANH SÁCH HÀNG CAO CẤP (>1000$) ===");
         list.stream()
-            .filter(IS_LUXURY)
-            .forEach(p -> System.out.println("- " + p.name));
+            .filter(IS_LUXURY) // Dùng Predicate đã khai báo ở trên
+            .forEach(p -> System.out.println("- " + p.name)); // Lambda Inline
 
-        System.out.println("\n=== KIỂM TRA HÀNG SẮP HẾT ===");
+        System.out.println("\n=== KIỂM TRA HÀNG SẮP HẾT (Dưới 5 cái) ===");
         list.stream()
-            .filter(p -> p.quantity < 5)
+            .filter(p -> p.quantity < 5) // Predicate Inline
             .forEach(p -> System.out.println("!!! Cần nhập thêm: " + p.name));
+
+        // 5. Minh họa biến đổi dữ liệu (Function)
+        System.out.println("\n=== DANH SÁCH TÊN SẢN PHẨM (Viết hoa) ===");
+        List<String> names = list.stream()
+            .map(p -> p.name.toUpperCase()) // Function: Biến Product thành String
+            .toList();
+        System.out.println(names);
     }
 }
